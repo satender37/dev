@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise!</title>
+    <!-- Load Tailwind CSS for modern utility styling --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Import Elegant Fonts: Dancing Script (Title) and Poppins (Body) */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;700&display=swap');
+
+        /* Apply a soft, whitish-pink background and Poppins font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef0f8; /* Soft pinkish white for the initial landing page */
+            overflow: hidden; 
+            transition: background-color 1s ease-in-out;
+        }
+        
+        /* Cherry Blossom Background Class (Applied when revealing the page) */
+        body.reveal-bg {
+            /* Using a random image URL for testing purposes */
+            background-image: url('./bg.jpg') !important; 
+            background-color: #ffc0cb !important; /* Fallback color, soft pink */
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important; 
+            transition: background-image 1s ease-in-out, background-color 1s ease-in-out; 
+        }
+
+
+        /* NOTE: The @keyframes glow animation was removed as it's not suitable for dark text */
+
+
+        /* CARD STYLING FOR REVEAL PAGE - GLASSMORHPISM EFFECT */
+        #reveal-card { /* Targeted the specific ID for the reveal page card */
+            background-color: rgba(255, 255, 255, 0.15); /* Very light, transparent white */
+            backdrop-filter: blur(15px); /* The key glassmorphism effect */
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            box-shadow: 0 8px 32px 0 rgba(255, 0, 127, 0.37); /* Pinkish shadow */
+            transition: all 0.3s ease-in-out;
+            border-radius: 1.5rem; /* Tailwind's rounded-3xl */
+            padding: 1rem 3rem; /* Tailwind's p-4 sm:p-12 md:p-16 combined */
+            max-width: 44rem; /* Tailwind's max-w-xl */
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* UPDATED: Main Title color set to dark gray, removed glow animation */
+        .glowing-title {
+            /* Removed animation: glow 3s infinite alternate ease-in-out; */
+            color: #1f2937; /* Dark Gray (text-gray-800 equivalent) */
+            font-family: 'Poppins', sans-serif; 
+            line-height: 1.2; 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap; /* IMPORTANT: Allow wrapping */
+            overflow: visible; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+        }
+
+        /* Styling for the individual letter spans created by JS */
+        .glowing-title span {
+            display: inline-block; /* Required for transform animations */
+            position: relative; 
+            line-height: 1;
+        }
+
+        /* NEW ANIMATION: Continuous subtle bounce for each letter */
+        @keyframes letterBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); } /* Bounce up 8px */
+        }
+
+        /* This class is applied to each letter span for continuous bounce */
+        .bouncing-letter {
+            animation: letterBounce 1.5s infinite ease-in-out; /* Continuous, smooth bounce */
+        }
+
+        /* NEW REVEAL ANIMATION KEYFRAMES for the elegant initial fade-in/scale-up */
+        @keyframes revealTitleInitial {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* This class is added by JavaScript to trigger the initial fade-in animation for the whole title */
+        .animate-in {
+            animation: revealTitleInitial 1.5s ease-out forwards; /* 1.5s duration, ease-out, stays at end state */
+        }
+        
+        /* Style for the Floating Flower Particles, using a mix of pinks and white */
+        .flower-particle {
+            position: absolute;
+            line-height: 1;
+            pointer-events: none;
+            opacity: 0.9;
+            color: #ffc0cb; /* Light Pink for contrast against the light body background */
+            transition: opacity 1s;
+        }
+
+        /* Card background and shadow updated to white/light pink theme (for landing page) */
+        #landing-page .card-container {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.85); /* Mostly opaque white */
+            box-shadow: 0 15px 40px rgba(255, 0, 127, 0.3); /* Fuchsia shadow */
+            border: 2px solid rgba(255, 0, 127, 0.1);
+            transition: all 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        /* Button styling updated */
+        .action-button {
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.6);
+            background: linear-gradient(145deg, #ff007f, #ff69b4); /* Fuchsia to Hot Pink */
+            color: #ffffff; 
+            font-weight: 700;
+        }
+        .action-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 0, 127, 0.9);
+        }
+
+        /* NEW BOUNCE ANIMATION FOR THE IMAGE */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); } /* Bounces up 10px */
+        }
+
+        .bouncing-image {
+            animation: bounce 2s infinite ease-in-out; /* 2s duration, infinite, smooth */
+        }
+
+        /* * UPDATED: Text colors on the reveal card set to dark gray for maximum prominence.
+        * Text shadow has been removed.
+        */
+        #reveal-page .card-container p {
+            /* Dark Gray color */
+            color: #1f2937; 
+            /* Removed text-shadow for dark text */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- 1. LANDING PAGE (Initial View) --><div id="landing-page" class="min-h-screen w-full flex items-center justify-center">
+        <div class="card-container p-8 sm:p-12 md:p-16 rounded-3xl max-w-lg w-full text-center">
+            <h1 class="text-6xl sm:text-7xl font-extrabold text-gray-800 mb-8">
+                A Little Surprise <span class="text-pink-600">For You</span>
+            </h1>
+            <p class="text-gray-600 text-xl mb-10 font-light">
+                Please click below to reveal your special message...
+            </p>
+            
+            <button id="proceed-button" 
+                    class="action-button py-3 px-10 rounded-full text-lg"
+                    onclick="proceedToReveal()">
+                Proceed
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. REVEAL PAGE (Hidden Initially) --><div id="reveal-page" class="hidden min-h-screen w-full flex items-center justify-center">
+        <!-- Main Card on Reveal Page (Centered by flex utility on parent) --><div id="reveal-card" class="card-container p-4 sm:p-12 md:p-16 rounded-3xl max-w-xl w-full text-center py-8 sm:py-12">
+            
+            <!-- Main Glowing Title - FONT SIZE REDUCED to prevent wrapping --><h1 id="main-title" 
+                class="glowing-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold mb-8 
+                        opacity-0 scale-90 transition-none">
+                <!-- Content inserted here by JavaScript --></h1>
+
+            <!-- The Personalized Image Container (Square with rounded corners) and BOUNCE ANIMATION --><div class="mx-auto my-8 w-44 h-44 border-4 border-white shadow-2xl shadow-pink-200/50 rounded-[30px] bouncing-image flex items-center justify-center bg-pink-100/50">
+                <img src="./photo.jpeg" alt="Personalized Image" class="w-full h-full object-cover rounded-[26px]">
+            </div>
+            
+            <!-- The main loving message --><div id="loving-message" class="space-y-4 pt-3">
+                <p class="text-xl sm:text-2xl font-light">
+                    To the one who fills my life with joy and sparkle:
+                </p>
+                <p class="text-lg sm:text-xl font-light">
+                    Happy birthday Monika, you fill my life with laughters, colour and endless memories.
+                </p>
+                <!-- ADDED NEW TEXT LINE HERE --><p class="text-lg sm:text-xl font-light">
+                    You're not just my bestfriend, you are a blessing. May your day be a wonderful and lovel as you are!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Animations and Interactivity --><script>
+        const body = document.body;
+        const landingPage = document.getElementById('landing-page');
+        const revealPage = document.getElementById('reveal-page');
+        const mainTitle = document.getElementById('main-title'); // Get the H1 element
+        
+        // --- EDIT THIS LINE TO CHANGE THE BIRTHDAY TEXT ---
+        // The '|' character forces the line break.
+        const birthdayText = "HAPPY BIRTHDAY | MADAM JI"; 
+        // --------------------------------------------------
+        
+        // Floral/Sparkle colors for the falling particles (Pink/White palette)
+        const colors = ['#ff007f', '#ff69b4', '#ffc0cb', '#ffffff']; 
+        
+        // --- 1. Flower Particle Animation Logic (Larger, more beautiful, and highly frequent) ---
+        let flowerParticles = [];
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.classList.add('flower-particle');
+            
+            // Using a sparkle/asterisk emoji for a floral look
+            flower.innerHTML = '&#x273F;'; 
+
+            // Random size - CHANGED TO INCLUDE A WIDER RANGE (5px to 50px)
+            const size = Math.random() * 45 + 5; 
+            flower.style.fontSize = `${size}px`;
+            flower.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Set initial position randomly across the entire width
+            flower.initialLeft = Math.random() * window.innerWidth;
+            flower.style.left = `${flower.initialLeft}px`;
+            flower.style.top = `-70px`; /* Start higher */
+            
+            // Assign unique properties for sine wave and rotation
+            flower.amplitude = Math.random() * 20 + 10; // Sway distance (10px to 30px)
+            flower.frequency = Math.random() * 0.01 + 0.005; // Sway speed
+            
+            // Adjust vertical speed based on size (smaller particles fall slower, larger fall faster)
+            const baseVelocity = Math.random() * 1.5 + 1.5;
+            flower.yVelocity = baseVelocity * (size / 25); // Scaling velocity by size
+            
+            flower.time = Math.random() * 360; // Start at random point in sine wave cycle
+            
+            flower.rotation = Math.random() * 360;
+            flower.rotationSpeed = (Math.random() - 0.5) * 2; // rotation speed
+
+            body.appendChild(flower);
+            flowerParticles.push(flower);
+        }
+
+        // Animation loop for flowers
+        function animateFlowers() {
+            // Create a new flower frequently for a constant shower effect - MUCH HIGHER FREQUENCY
+            if (Math.random() < 0.6) {
+                createFlower();
+            }
+
+            // Update positions and manage life cycle
+            flowerParticles = flowerParticles.filter(flower => {
+                let currentTop = parseFloat(flower.style.top);
+                
+                // 1. Vertical Movement (Constant fall)
+                currentTop += flower.yVelocity;
+
+                // 2. Horizontal Movement (Sine wave oscillation for even distribution)
+                flower.time += 1; // Increment time for oscillation
+                let offsetX = flower.amplitude * Math.sin(flower.time * flower.frequency);
+                
+                let currentLeft = flower.initialLeft + offsetX;
+                
+                // 3. Update element style
+                flower.rotation += flower.rotationSpeed; // Update rotation
+
+                flower.style.top = `${currentTop}px`;
+                flower.style.left = `${currentLeft}px`;
+                flower.style.transform = `rotate(${flower.rotation}deg)`; 
+                
+                // Remove flower if it falls off the bottom or significantly off sides
+                if (currentTop > window.innerHeight) {
+                    flower.remove();
+                    return false; // remove from array
+                }
+                return true; // keep in array
+            });
+
+            // Only continue the loop if the reveal page is visible
+            if (!revealPage.classList.contains('hidden')) {
+                requestAnimationFrame(animateFlowers);
+            }
+        }
+
+
+        // --- New Function: Populate and Animate Title Letters ---
+        function populateAndAnimateTitle() {
+            mainTitle.innerHTML = ''; // Clear existing content
+            let delay = 0; // Stagger animation delay
+
+            birthdayText.split('').forEach((char, index) => {
+                
+                // --- LINE BREAK LOGIC ADDED HERE ---
+                if (char === '|') {
+                    // Create a full-width div to force the flex container to wrap
+                    const lineBreak = document.createElement('div');
+                    lineBreak.style.width = '100%';
+                    lineBreak.style.height = '0';
+                    mainTitle.appendChild(lineBreak);
+                    return; // Skip creating a span for the marker
+                }
+                // --- END LINE BREAK LOGIC ---
+                
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? '\xA0' : char; // Use non-breaking space for actual spaces
+                span.classList.add('bouncing-letter'); // Apply the continuous bounce animation
+                span.style.animationDelay = `${delay}s`; // Stagger the bounce start time
+                mainTitle.appendChild(span);
+                
+                delay += 0.08; // Increment delay for next letter
+            });
+
+            // Trigger the overall title fade-in/scale-up animation
+            mainTitle.classList.add('animate-in');
+        }
+
+
+        // --- 2. Page Transition Logic ---
+
+        function proceedToReveal() {
+            // 1. Hide the landing page
+            landingPage.style.opacity = 0;
+            
+            // 2. Wait for fade-out, then swap views
+            setTimeout(() => {
+                landingPage.classList.add('hidden');
+                revealPage.classList.remove('hidden');
+                
+                // Apply the cherry blossom background class to the body
+                document.body.classList.add('reveal-bg'); 
+
+                // 3. Populate and animate the title letters (Handles the initial fade and continuous bounce)
+                populateAndAnimateTitle();
+
+                // 4. Start the flower animation on the new page
+                animateFlowers();
+                
+                // Ensure the reveal page is fully visible
+                revealPage.style.opacity = 1;
+
+            }, 500); // Wait 0.5s for fade out
+        }
+
+    </script>
+
+</body>
+</html>
